@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Trova il percorso di tiddl
-const TIDDL_PATH = '/Users/guitarman/.local/bin/tiddl';
+const TIDDL_PATH = path.join(os.homedir(), '.local', 'bin', 'tiddl');
 
 // Storico download in memoria
 const downloadHistory = [];
@@ -184,7 +184,7 @@ playlist = "{playlist.title}/cover"
 
   const env = {
     ...process.env,
-    PATH: `/Users/guitarman/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`
+    PATH: `${path.join(os.homedir(), '.local', 'bin')}:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`
   };
 
   const proc = spawn(TIDDL_PATH, args, {
@@ -241,7 +241,7 @@ playlist = "{playlist.title}/cover"
 app.post('/api/auth', (req, res) => {
   const env = {
     ...process.env,
-    PATH: `/Users/guitarman/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`
+    PATH: `${path.join(os.homedir(), '.local', 'bin')}:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`
   };
 
   const proc = spawn(TIDDL_PATH, ['auth', 'login'], { env });
