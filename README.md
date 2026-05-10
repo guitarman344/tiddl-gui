@@ -1,7 +1,7 @@
 # 🎵 Tiddl-GUI
 An elegant, modern, and high-performance Web GUI for downloading high-quality music from TIDAL.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-Unlicense-blue.svg)
 ![Node.js](https://img.shields.io/badge/node.js-%3E%3D16-green.svg)
 ![TIDAL](https://img.shields.io/badge/service-TIDAL-00C9FF.svg)
 
