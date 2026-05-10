@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tiddl — TIDAL Downloader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background image -->
+  <div class="bg-image"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Animated orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">♫</div>
+      <div class="logo-text">
+        <span class="logo-title">tiddl</span>
+        <span class="logo-sub">TIDAL Downloader</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Connessione...</span>
+      <button class="btn-auth" id="btnAuth" onclick="openAuthModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Accedi a TIDAL
+      </button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Tabs: Download / Cerca -->
+    <div class="tabs">
+      <button class="tab active" id="tabDownload" onclick="switchTab('download')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download URL
+      </button>
+      <button class="tab" id="tabSearch" onclick="switchTab('search')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Cerca su TIDAL
+      </button>
+    </div>
+
+    <!-- Download Card -->
+    <section class="card download-card" id="panelDownload">
+      <div class="card-header">
+        <h1 class="card-title">Scarica da TIDAL</h1>
+        <p class="card-subtitle">Incolla il link di un album, traccia, playlist o video</p>
+      </div>
+
+      <div class="url-input-wrap">
+        <div class="url-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <input type="url" id="tidalUrl" class="url-input" placeholder="https://tidal.com/album/..." autocomplete="off" />
+        <button class="btn-paste" id="btnPaste" onclick="pasteFromClipboard()" title="Incolla dagli appunti">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
+
+      <div class="type-badge-wrap" id="typeBadgeWrap" style="display:none">
+        <span class="type-badge" id="typeBadge"></span>
+      </div>
+
+      <div class="options-grid">
+        <div class="option-group">
+          <label class="option-label">Qualità Audio</label>
+          <div class="select-wrap">
+            <select id="quality" class="option-select">
+              <option value="auto">🎵 Auto (Migliore disponibile)</option>
+              <option value="max">💎 Max (HiRes 24-bit)</option>
+              <option value="high" selected>🎼 Lossless (FLAC 16-bit)</option>
+              <option value="normal">🎧 Normal (AAC 320k)</option>
+              <option value="low">📱 Low (AAC 96k)</option>
+            </select>
+            <div class="select-arrow">▾</div>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label class="option-label">Cartella di Download</label>
+          <div class="path-input-wrap">
+            <input type="text" id="downloadPath" class="option-input" placeholder="~/Music/TIDAL (default)" />
+            <button class="btn-browse" onclick="browseFolder()" title="Sfoglia...">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="option-group full-width" style="flex-direction: row; align-items: center; gap: 12px; margin-top: 4px;">
+          <label class="switch">
+            <input type="checkbox" id="saveCovers" checked>
+            <span class="slider round"></span>
+          </label>
+          <label class="option-label" style="margin: 0; cursor: pointer;" onclick="document.getElementById('saveCovers').click()">
+            Scarica Copertine e Testi
+          </label>
+        </div>
+
+        <div class="option-group full-width">
+          <label class="option-label">Template Nome File <span class="optional">(opzionale)</span></label>
+          <input type="text" id="template" class="option-input" placeholder="{album.artist}/{album.title}/{item.number}. {item.title}" />
+        </div>
+      </div>
+
+      <button class="btn-download" id="btnDownload" onclick="startDownload()">
+        <span class="btn-icon">⬇</span>
+        <span id="btnDownloadText">Avvia Download</span>
+        <div class="btn-shimmer"></div>
+      </button>
+    </section>
+
+    <!-- Search Card -->
+    <section class="card search-card" id="panelSearch" style="display:none">
+      <div class="card-header">
+        <h1 class="card-title">Cerca su TIDAL</h1>
+        <p class="card-subtitle">Trova artisti, album e tracce da scaricare</p>
+      </div>
+
+      <div class="url-input-wrap">
+        <div class="url-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input type="text" id="searchInput" class="url-input" placeholder="Cerca artista, album o traccia..." autocomplete="off" />
+        <button class="btn-paste" onclick="doSearch()" title="Cerca">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Search filter chips -->
+      <div class="search-filters">
+        <button class="chip active" data-filter="all" onclick="setSearchFilter('all', this)">Tutto</button>
+        <button class="chip" data-filter="artists" onclick="setSearchFilter('artists', this)">🎤 Artisti</button>
+        <button class="chip" data-filter="albums" onclick="setSearchFilter('albums', this)">💿 Album</button>
+        <button class="chip" data-filter="tracks" onclick="setSearchFilter('tracks', this)">🎵 Tracce</button>
+      </div>
+
+      <!-- Search results -->
+      <div id="searchResults" class="search-results">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <p>Cerca un artista o album per iniziare</p>
+        </div>
+      </div>
+
+      <!-- Loading spinner -->
+      <div id="searchLoading" class="search-loading" style="display:none">
+        <div class="search-spinner"></div>
+        <p>Ricerca in corso...</p>
+      </div>
+    </section>
+
+    <!-- Active Downloads -->
+    <section id="activeSection" class="card" style="display:none">
+      <div class="card-header">
+        <h2 class="card-title-sm">Download Attivi</h2>
+        <div class="pulse-dot"></div>
+      </div>
+      <div id="activeDownloads" class="downloads-list"></div>
+    </section>
+
+    <!-- History -->
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title-sm">Storico Download</h2>
+        <button class="btn-clear" onclick="clearHistory()">Cancella</button>
+      </div>
+      <div id="historyList" class="downloads-list">
+        <div class="empty-state">
+          <div class="empty-icon">🎵</div>
+          <p>Nessun download ancora</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="authModal" style="display:none" onclick="closeAuthModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Accedi a TIDAL</h2>
+        <button class="modal-close" onclick="closeAuthModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Avvia il processo di autenticazione. Si aprirà un link TIDAL nel browser per completare il login.</p>
+        <div id="authLog" class="auth-log"></div>
+        <div id="authUrlBox" class="auth-url-box" style="display:none">
+          <p class="auth-url-label">🔗 Apri questo link per autenticarti:</p>
+          <a id="authUrl" href="#" target="_blank" class="auth-url-link"></a>
+        </div>
+        <button class="btn-download" id="btnStartAuth" onclick="startAuth()">
+          <span class="btn-icon">🔐</span>
+          Avvia Autenticazione
+          <div class="btn-shimmer"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log Modal -->
+  <div class="modal-overlay" id="logModal" style="display:none" onclick="closeLogModal(event)">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h2 id="logModalTitle">Log Download</h2>
+        <button class="modal-close" onclick="closeLogModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="logContent" class="log-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
