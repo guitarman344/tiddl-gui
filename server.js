@@ -454,6 +454,19 @@ app.post('/api/download', (req, res) => {
   res.json({ id, message: 'Download avviato' });
 });
 
+
+// Le versioni vecchie di tiddl non hanno --no-browser
+let noBrowserCache = null;
+function tiddlSupportsNoBrowser() {
+  if (noBrowserCache !== null) return noBrowserCache;
+  try {
+    const bin = findTiddl();
+    const out = require('child_process').spawnSync(bin, ['auth', 'login', '--help'], { env: buildEnv(), encoding: 'utf8', timeout: 15000 });
+    noBrowserCache = /--no-browser/.test((out.stdout || '') + (out.stderr || ''));
+  } catch { noBrowserCache = false; }
+  return noBrowserCache;
+}
+
 // ── Autenticazione ────────────────────────────────────────
 let authProc = null;
 
@@ -465,7 +478,7 @@ app.post('/api/auth', (req, res) => {
   let proc;
   try {
     // --no-browser: il link lo apre la pagina web, non il server
-    proc = spawnTiddl(['auth', 'login', '--no-browser']);
+    proc = spawnTiddl(['auth', 'login', ...(tiddlSupportsNoBrowser() ? ['--no-browser'] : [])]);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

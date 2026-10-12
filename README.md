@@ -14,7 +14,7 @@ An elegant, modern, and high-performance Web GUI for downloading high-quality mu
 - **Session Management**: Native TIDAL authentication handling.
 
 ## 🚀 Getting Started
-1. Install the tiddl CLI (and ffmpeg): `pipx install tiddl` · `brew install ffmpeg`
+1. Install the tiddl CLI (v3 needs Python 3.13+) and ffmpeg: `pipx install "tiddl>=3"` · `brew install ffmpeg`
 2. Install dependencies: `npm install`
 3. Start the server: `node server.js`
 4. Open your browser at `http://localhost:7432`
