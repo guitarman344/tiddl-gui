@@ -14,10 +14,20 @@ An elegant, modern, and high-performance Web GUI for downloading high-quality mu
 - **Session Management**: Native TIDAL authentication handling.
 
 ## 🚀 Getting Started
-1. Install dependencies: `npm install`
-2. Start the server: `node server.js`
-3. Open your browser at `http://localhost:7432`
-4. Authenticate your TIDAL account and start downloading!
+1. Install the tiddl CLI (and ffmpeg): `pipx install tiddl` · `brew install ffmpeg`
+2. Install dependencies: `npm install`
+3. Start the server: `node server.js`
+4. Open your browser at `http://localhost:7432`
+5. Authenticate your TIDAL account and start downloading!
+
+### Options (environment variables)
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `7432` | Server port |
+| `HOST` | `127.0.0.1` | Listen address (local only by default) |
+| `TIDDL_BIN` | auto | Full path to the `tiddl` executable, if it isn't found automatically |
+
+The GUI only updates the `[metadata]` and `[cover]` sections of `~/.tiddl/config.toml`; the rest of your tiddl config is preserved.
 
 ## 🛠️ Built With
 - **Backend**: Node.js, Express, Socket.io

@@ -412,6 +412,8 @@ input:checked + .slider:before { transform: translateX(20px); }
 .dl-type.Traccia { background: rgba(0,201,255,0.15); color: var(--accent); border: 1px solid rgba(0,201,255,0.25); }
 .dl-type.Playlist { background: rgba(0,229,160,0.15); color: var(--success); border: 1px solid rgba(0,229,160,0.25); }
 .dl-type.Video { background: rgba(255,107,157,0.15); color: var(--accent3); border: 1px solid rgba(255,107,157,0.25); }
+.dl-type.Artista { background: rgba(255,179,71,0.15); color: var(--warning); border: 1px solid rgba(255,179,71,0.25); }
+.dl-type.Mix { background: rgba(124,93,249,0.12); color: var(--text); border: 1px solid rgba(124,93,249,0.25); }
 .dl-type.unknown { background: rgba(255,255,255,0.08); color: var(--text-muted); border: 1px solid var(--border); }
 
 .dl-url { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

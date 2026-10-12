@@ -92,7 +92,7 @@
         <div class="option-group">
           <label class="option-label">Cartella di Download</label>
           <div class="path-input-wrap">
-            <input type="text" id="downloadPath" class="option-input" placeholder="~/Music/TIDAL (default)" />
+            <input type="text" id="downloadPath" class="option-input" placeholder="~/Music/tiddl (default)" />
             <button class="btn-browse" onclick="browseFolder()" title="Sfoglia...">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             </button>
@@ -194,7 +194,7 @@
         <button class="modal-close" onclick="closeAuthModal()">✕</button>
       </div>
       <div class="modal-body">
-        <p class="modal-desc">Avvia il processo di autenticazione. Si aprirà un link TIDAL nel browser per completare il login.</p>
+        <p class="modal-desc" id="authDesc">Avvia il processo di autenticazione. Si aprirà un link TIDAL nel browser per completare il login.</p>
         <div id="authLog" class="auth-log"></div>
         <div id="authUrlBox" class="auth-url-box" style="display:none">
           <p class="auth-url-label">🔗 Apri questo link per autenticarti:</p>
@@ -205,6 +205,7 @@
           Avvia Autenticazione
           <div class="btn-shimmer"></div>
         </button>
+        <button class="btn-clear" id="btnLogout" onclick="logout()" style="display:none;width:100%;padding:12px">Disconnetti account TIDAL</button>
       </div>
     </div>
   </div>
